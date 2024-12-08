@@ -1,5 +1,7 @@
 #include "AdminMenu.h"
 #include "AddUser.h"
+#include "ReporteMatriz.h"
+
 #include <iostream>
 
 // Definir códigos de colores
@@ -36,6 +38,9 @@ void mostrarMenuAdmin()
             break;
         case 2:
             std::cout << GREEN << "Reporte Matriz Dispersa" << RESET << std::endl;
+
+            reporte_matriz();
+
             break;
         case 3:
             std::cout << GREEN << "Reporte Activos Disponibles de un Departamento" << RESET << std::endl;

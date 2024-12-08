@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 #include "AdminMenu.h"
+#include <limits>
+#include "../classes/MatrizDispersa.h"
 
 // Definir códigos de colores
 #define RESET "\033[0m"
@@ -12,40 +14,56 @@
 
 void login()
 {
-    std::string user, password, departamento, empresa;
+    std::string user, password, empresa, departamento;
 
-    std::cout << BLUE << "-------------------- Iniciar sesión --------------------" << RESET << std::endl;
-    std::cout << "" << std::endl;
+    std::cout << "\033[34m-------------------- Iniciar sesión --------------------\033[0m" << std::endl;
+
     // Solicitar datos al usuario
     std::cout << "Ingrese el usuario: ";
-    std::cin.ignore();
     std::getline(std::cin, user);
+
     std::cout << "Ingrese la contraseña: ";
     std::getline(std::cin, password);
-    std::cout << "Ingrese el departamento: ";
-    std::getline(std::cin, departamento);
+
     std::cout << "Ingrese la empresa: ";
     std::getline(std::cin, empresa);
 
-    std::cout << "" << std::endl;
-    std::cout << BLUE << "--------------------------------------------------------" << RESET << std::endl;
+    std::cout << "Ingrese el departamento: ";
+    std::getline(std::cin, departamento);
+
+    std::cout << "\033[34m--------------------------------------------------------\033[0m" << std::endl;
 
     // Verificar si el usuario es administrador
-    if (user == "admin" && password == "admin" && departamento.empty() && empresa.empty())
+    if (user == "admin" && password == "admin" && empresa.empty() && departamento.empty())
     {
-        std::cout << GREEN << "Bienvenido, administrador." << RESET << std::endl;
-
-        // Mostrar menú de administrador
+        std::cout << "\033[32mBienvenido, administrador.\033[0m" << std::endl;
         mostrarMenuAdmin();
     }
     else
     {
-        std::cout << "Datos ingresados: " << std::endl;
-        std::cout << "Usuario: " << user << std::endl;
-        std::cout << "Contraseña: " << password << std::endl;
-        std::cout << "Departamento: " << departamento << std::endl;
-        std::cout << "Empresa: " << empresa << std::endl;
+
+        auto matriz = MatrizDispersa::obtenerInstancia();
+
+        // crear usuario por defecto
+        auto usuario = std::make_shared<Usuario>("jorge", "1234");
+
+        // Insertar en la matriz dispersa
+        matriz->insertar("empresa", "departamento", usuario);
+
+        // Verificar si el usuario existe
+        auto usuarioExistente = matriz->buscarUsuarioPorNombre(user, departamento, empresa);
+
+        if (usuarioExistente && usuarioExistente->Password == password)
+        {
+            std::cout << "\033[32mBienvenido, " << user << ".\033[0m" << std::endl;
+        }
+        else
+        {
+            std::cout << "\033[31mUsuario o contraseña incorrectos.\033[0m" << std::endl;
+        }
     }
 
-    login();
+    // Limpiar el búfer de entrada
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    login(); // Volver a llamar a la función
 }

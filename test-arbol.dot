@@ -1,0 +1,18 @@
+digraph AVLTree {
+    // Configuración del grafo
+    node [shape = record; height = .1;];
+    
+    // Definir nodos
+    node1 [label = "DEF456\nMonitor";];
+    node2 [label = "ABC123\nComputadora";];
+    node3 [label = "GHI789\nTeclado";];
+    node4 [label = "JKL012\nMouse";];
+    
+    // Definir conexiones
+    node1 -> node2;
+    // DEF456 -> ABC123
+    node1 -> node3;
+    // DEF456 -> GHI789
+    node3 -> node4;
+    // GHI789 -> JKL012
+}
