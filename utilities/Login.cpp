@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include "AdminMenu.h"
+#include "UserMenu.h"
 #include <limits>
 #include "../classes/MatrizDispersa.h"
 
@@ -45,10 +46,10 @@ void login()
         auto matriz = MatrizDispersa::obtenerInstancia();
 
         // crear usuario por defecto
-        auto usuario = std::make_shared<Usuario>("jorge", "1234");
+        auto usuario = std::make_shared<Usuario>("j", "1");
 
         // Insertar en la matriz dispersa
-        matriz->insertar("empresa", "departamento", usuario);
+        matriz->insertar("e", "d", usuario);
 
         // Verificar si el usuario existe
         auto usuarioExistente = matriz->buscarUsuarioPorNombre(user, departamento, empresa);
@@ -56,10 +57,14 @@ void login()
         if (usuarioExistente && usuarioExistente->Password == password)
         {
             std::cout << "\033[32mBienvenido, " << user << ".\033[0m" << std::endl;
+
+            mostrarMenuUsuario(usuarioExistente);
         }
         else
         {
             std::cout << "\033[31mUsuario o contraseña incorrectos.\033[0m" << std::endl;
+
+            login();
         }
     }
 

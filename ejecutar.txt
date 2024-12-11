@@ -1,1 +1,1 @@
-g++ -o main main.cpp classes/Empresa.cpp && ./main
+g++ main.cpp classes/MatrizDispersa.cpp classes/CircleDoubleLinkedList.cpp classes/Usuario.cpp classes/Activo.cpp classes/Transaction.cpp classes/AVL.cpp utilities/Login.cpp utilities/AddUser.cpp utilities/AdminMenu.cpp utilities/ReporteMatriz.cpp utilities/UserMenu.cpp utilities/LoggedUser.cpp -o main && ./main

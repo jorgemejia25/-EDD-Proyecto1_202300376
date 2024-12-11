@@ -395,3 +395,138 @@ Usuario *MatrizDispersa::buscarUsuarioPorNombre(const std::string &nombre, const
 
     return nullptr;
 }
+
+void MatrizDispersa::mostrarActivosDeMatriz(
+    int userId)
+{
+    auto filaActual = primerFila;
+
+    while (filaActual)
+    {
+        auto colActual = primerColumna;
+
+        while (colActual)
+        {
+
+            auto nodo = buscarNodoEnPosicion(filaActual->primerNodo, colActual->primerNodo);
+
+            while (nodo)
+            {
+                if (nodo->usuario->id != userId)
+                    nodo->usuario->mostrarActivos();
+                nodo = nodo->adelante.get();
+            }
+
+            colActual = colActual->siguiente;
+        }
+
+        filaActual = filaActual->siguiente;
+    }
+}
+
+Activo *MatrizDispersa::buscarActivosDeMatriz(const std::string &idActivo)
+{
+    auto filaActual = primerFila;
+
+    while (filaActual)
+    {
+        auto colActual = primerColumna;
+
+        while (colActual)
+        {
+
+            auto nodo = buscarNodoEnPosicion(filaActual->primerNodo, colActual->primerNodo);
+
+            while (nodo)
+            {
+                auto activo = nodo->usuario->buscarActivo(idActivo);
+                if (activo)
+                    return activo;
+                nodo = nodo->adelante.get();
+            }
+
+            colActual = colActual->siguiente;
+        }
+
+        filaActual = filaActual->siguiente;
+    }
+
+    return nullptr;
+}
+
+AVL *MatrizDispersa::arbolAVLEmpresas(const std::string &empresa)
+{
+    auto actualFila = primerFila;
+    AVL *arbol = new AVL();
+
+    // Recorrer la fila de la empresa
+    // Recorrer cada columna de la fila de adelante hacia atrás
+
+    while (actualFila)
+    {
+        if (actualFila->nombre == empresa)
+
+            std::cout << "Empresa: " << empresa << std::endl;
+
+        {
+            auto actualCol = primerColumna;
+
+            while (actualCol)
+            {
+                auto nodo = buscarNodoEnPosicion(actualFila->primerNodo, actualCol->primerNodo);
+
+                while (nodo)
+                {
+                    // Asegúrate de que `activos` devuelve un `AVL`
+                    arbol->fusionar(*nodo->usuario->activos);
+
+                    nodo = nodo->adelante.get();
+                }
+
+                actualCol = actualCol->siguiente;
+            }
+        }
+        actualFila = actualFila->siguiente;
+    }
+
+    arbol->inorden();
+
+    return arbol;
+}
+
+AVL *MatrizDispersa::arbolAVLDepartamentos(const std::string &departamento)
+{
+    auto actualCol = primerColumna;
+    AVL *arbol = new AVL();
+
+    // Recorrer la columna del departamento
+    // Recorrer cada fila de la columna de abajo hacia arriba
+    while (actualCol)
+    {
+        if (actualCol->nombre == departamento)
+        {
+            auto actualFila = primerFila;
+
+            while (actualFila)
+            {
+                auto nodo = buscarNodoEnPosicion(actualFila->primerNodo, actualCol->primerNodo);
+
+                while (nodo)
+                {
+                    // Asegúrate de que `activos` devuelve un `AVL`
+                    arbol->fusionar(*nodo->usuario->activos);
+
+                    nodo = nodo->adelante.get();
+                }
+
+                actualFila = actualFila->siguiente;
+            }
+        }
+
+        actualCol = actualCol->siguiente;
+    }
+
+    arbol->inorden();
+
+    return arbol;
+}

@@ -32,6 +32,9 @@ private:
     std::shared_ptr<Nodo> buscarRec(std::shared_ptr<Nodo> nodo, const std::string &id);
     void inordenRec(std::shared_ptr<Nodo> nodo) const;
     void generarDotRecursivo(std::ostream &out, std::shared_ptr<Nodo> nodo) const;
+    std::shared_ptr<Nodo> eliminarRec(std::shared_ptr<Nodo> nodo, const std::string &id);
+    std::shared_ptr<Nodo> getNodoMinimo(std::shared_ptr<Nodo> nodo);
+    void fusionarRec(std::shared_ptr<Nodo> nodo);
 
 public:
     AVL() : raiz(nullptr) {}
@@ -39,9 +42,11 @@ public:
     // Operaciones básicas
     void insertar(const Activo &activo);
     Activo *buscar(const std::string &id);
+    void eliminar(const std::string &id);
     void inorden() const;
     bool estaVacio() const { return raiz == nullptr; }
     void generarDot(std::ostream &out) const;
+    void fusionar(AVL &arbol);
 };
 
 #endif

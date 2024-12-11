@@ -28,8 +28,15 @@ void reporte_matriz()
 
         // Generar contenido DOT
         matriz->generarDot(archivo);
-
         archivo.close();
+
+        // Convertir archivo a PNG
+        int result = system("dot -Tpng reportes/reporte_matriz.dot -o reportes/reporte_matriz.png");
+        if (result != 0)
+        {
+            std::cerr << "Error al ejecutar el comando dot. Código de error: " << result << std::endl;
+        }
+
         std::cout << "Reporte generado exitosamente" << std::endl;
     }
     else

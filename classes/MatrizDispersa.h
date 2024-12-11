@@ -5,6 +5,8 @@
 #include <string>
 #include <ostream>
 #include "Usuario.h"
+#include "Activo.h"
+#include "AVL.h"
 
 class Nodo
 {
@@ -59,6 +61,11 @@ public:
 
     Usuario *buscarUsuarioPorNombre(const std::string &nombre, const std::string &departamento,
                                     const std::string &empresa);
+
+    void mostrarActivosDeMatriz(int userId);
+    Activo *buscarActivosDeMatriz(const std::string &idActivp);
+    AVL *arbolAVLDepartamentos(const std::string &departamento);
+    AVL *arbolAVLEmpresas(const std::string &empresa);
 };
 
 #endif // MATRIZDISPERSA_H

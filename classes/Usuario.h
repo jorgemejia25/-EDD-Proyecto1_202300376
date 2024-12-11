@@ -1,3 +1,4 @@
+// Usuario.h
 #ifndef USUARIO_H
 #define USUARIO_H
 
@@ -10,31 +11,15 @@ public:
     std::string Nombre;
     std::string Password;
     int id;
-    AVL *activos; // Árbol AVL para almacenar los activos del usuario
+    AVL *activos;
 
-    Usuario(const std::string &nombre, const std::string &password)
-        : Nombre(nombre), Password(password), activos(new AVL()) {}
+    Usuario(const std::string &nombre, const std::string &password); // Solo declaración
+    ~Usuario();
 
-    ~Usuario()
-    {
-        delete activos;
-    }
-
-    // Métodos para manipular los activos
-    void agregarActivo(const Activo &activo)
-    {
-        activos->insertar(activo);
-    }
-
-    Activo *buscarActivo(const std::string &id)
-    {
-        return activos->buscar(id);
-    }
-
-    void mostrarActivos() const
-    {
-        activos->inorden();
-    }
+    void agregarActivo(const Activo &activo);
+    Activo *buscarActivo(const std::string &id);
+    void mostrarActivos() const;
+    void eliminarActivo(const std::string &id);
 };
 
 #endif // USUARIO_H

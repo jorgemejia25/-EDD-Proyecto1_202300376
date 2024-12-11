@@ -112,7 +112,8 @@ void AVL::inordenRec(std::shared_ptr<Nodo> nodo) const
     if (nodo)
     {
         inordenRec(nodo->izquierdo);
-        std::cout << nodo->activo.toString() << "\n\n";
+        if (!nodo->activo.getRentado())
+            std::cout << nodo->activo.toString() << "\n\n";
         inordenRec(nodo->derecho);
     }
 }
@@ -160,4 +161,106 @@ void AVL::generarDotRecursivo(std::ostream &out, std::shared_ptr<Nodo> nodo) con
             << nodo->derecho->activo.getId() << "\";\n";
         generarDotRecursivo(out, nodo->derecho);
     }
+}
+
+std::shared_ptr<AVL::Nodo> AVL::getNodoMinimo(std::shared_ptr<Nodo> nodo)
+{
+    std::shared_ptr<Nodo> actual = nodo;
+    while (actual && actual->izquierdo)
+    {
+        actual = actual->izquierdo;
+    }
+    return actual;
+}
+
+std::shared_ptr<AVL::Nodo> AVL::eliminarRec(std::shared_ptr<Nodo> nodo, const std::string &id)
+{
+    if (!nodo)
+        return nullptr;
+
+    if (id < nodo->activo.getId())
+        nodo->izquierdo = eliminarRec(nodo->izquierdo, id);
+    else if (id > nodo->activo.getId())
+        nodo->derecho = eliminarRec(nodo->derecho, id);
+    else
+    {
+        // Nodo con un hijo o sin hijos
+        if (!nodo->izquierdo || !nodo->derecho)
+        {
+            std::shared_ptr<Nodo> temp = nodo->izquierdo ? nodo->izquierdo : nodo->derecho;
+            if (!temp)
+            {
+                temp = nodo;
+                nodo = nullptr;
+            }
+            else
+            {
+                *nodo = *temp;
+            }
+        }
+        else
+        {
+            // Nodo con dos hijos
+            std::shared_ptr<Nodo> temp = getNodoMinimo(nodo->derecho);
+            nodo->activo = temp->activo;
+            nodo->derecho = eliminarRec(nodo->derecho, temp->activo.getId());
+        }
+    }
+
+    if (!nodo)
+        return nullptr;
+
+    // Actualizar altura
+    nodo->altura = 1 + std::max(getAltura(nodo->izquierdo), getAltura(nodo->derecho));
+
+    // Verificar balance
+    int balance = getBalance(nodo);
+
+    // Casos de rotación
+    if (balance > 1 && getBalance(nodo->izquierdo) >= 0)
+        return rotacionDerecha(nodo);
+
+    if (balance > 1 && getBalance(nodo->izquierdo) < 0)
+    {
+        nodo->izquierdo = rotacionIzquierda(nodo->izquierdo);
+        return rotacionDerecha(nodo);
+    }
+
+    if (balance < -1 && getBalance(nodo->derecho) <= 0)
+        return rotacionIzquierda(nodo);
+
+    if (balance < -1 && getBalance(nodo->derecho) > 0)
+    {
+        nodo->derecho = rotacionDerecha(nodo->derecho);
+        return rotacionIzquierda(nodo);
+    }
+
+    return nodo;
+}
+
+void AVL::eliminar(const std::string &id)
+{
+    raiz = eliminarRec(raiz, id);
+}
+
+void AVL::fusionarRec(std::shared_ptr<Nodo> nodo)
+{
+    if (!nodo)
+        return;
+
+    // Insertar el nodo actual en el árbol
+    insertar(nodo->activo);
+
+    // Recorrer los subárboles izquierdo y derecho
+    fusionarRec(nodo->izquierdo);
+    fusionarRec(nodo->derecho);
+}
+
+void AVL::fusionar(AVL &otroArbol)
+{
+    if (otroArbol.estaVacio())
+        return;
+
+    // Recorrer el árbol recibido en orden e insertar cada nodo en el árbol actual
+    fusionarRec(otroArbol.raiz);
 }
