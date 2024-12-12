@@ -5,8 +5,21 @@
 #include <cstring>
 #include <errno.h>
 
+/**
+ * @brief Implementación de la generación de reportes de la matriz dispersa
+ * 
+ * Esta función realiza las siguientes operaciones:
+ * 1. Obtiene la instancia de la matriz dispersa
+ * 2. Crea el directorio '../reportes' si no existe
+ * 3. Genera un archivo DOT con la estructura de la matriz
+ * 4. Convierte el archivo DOT a PNG usando Graphviz
+ * 
+ * @note Requiere que Graphviz esté instalado en el sistema
+ * @throws Puede generar errores si no se pueden crear directorios o archivos
+ */
 void reporte_matriz()
 {
+    // Obtener instancia singleton de la matriz
     auto matriz = MatrizDispersa::obtenerInstancia();
 
     // Crear directorio si no existe
@@ -26,11 +39,11 @@ void reporte_matriz()
     {
         std::cout << "Generando reporte..." << std::endl;
 
-        // Generar contenido DOT
+        // Generar contenido DOT utilizando el método de la matriz dispersa
         matriz->generarDot(archivo);
         archivo.close();
 
-        // Convertir archivo a PNG
+        // Convertir archivo DOT a PNG usando Graphviz
         int result = system("dot -Tpng reportes/reporte_matriz.dot -o reportes/reporte_matriz.png");
         if (result != 0)
         {

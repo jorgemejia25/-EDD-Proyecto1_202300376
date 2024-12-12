@@ -3,6 +3,11 @@
 #include <algorithm>
 #include <iostream>
 
+/**
+ * Obtiene la altura de un nodo específico
+ * @param nodo Nodo del cual se obtendrá la altura
+ * @return Altura del nodo (0 si el nodo es nullptr)
+ */
 int AVL::getAltura(std::shared_ptr<Nodo> nodo)
 {
     if (!nodo)
@@ -10,6 +15,11 @@ int AVL::getAltura(std::shared_ptr<Nodo> nodo)
     return nodo->altura;
 }
 
+/**
+ * Calcula el factor de balance de un nodo
+ * @param nodo Nodo del cual se calculará el balance
+ * @return Factor de balance (altura izquierda - altura derecha)
+ */
 int AVL::getBalance(std::shared_ptr<Nodo> nodo)
 {
     if (!nodo)
@@ -17,6 +27,11 @@ int AVL::getBalance(std::shared_ptr<Nodo> nodo)
     return getAltura(nodo->izquierdo) - getAltura(nodo->derecho);
 }
 
+/**
+ * Realiza una rotación a la derecha sobre el nodo y
+ * @param y Nodo sobre el cual se realizará la rotación
+ * @return Nuevo nodo raíz después de la rotación
+ */
 std::shared_ptr<AVL::Nodo> AVL::rotacionDerecha(std::shared_ptr<Nodo> y)
 {
     std::shared_ptr<Nodo> x = y->izquierdo;
@@ -31,6 +46,11 @@ std::shared_ptr<AVL::Nodo> AVL::rotacionDerecha(std::shared_ptr<Nodo> y)
     return x;
 }
 
+/**
+ * Realiza una rotación a la izquierda sobre el nodo x
+ * @param x Nodo sobre el cual se realizará la rotación
+ * @return Nuevo nodo raíz después de la rotación
+ */
 std::shared_ptr<AVL::Nodo> AVL::rotacionIzquierda(std::shared_ptr<Nodo> x)
 {
     std::shared_ptr<Nodo> y = x->derecho;
@@ -45,6 +65,12 @@ std::shared_ptr<AVL::Nodo> AVL::rotacionIzquierda(std::shared_ptr<Nodo> x)
     return y;
 }
 
+/**
+ * Función recursiva auxiliar para insertar un activo en el árbol
+ * @param nodo Nodo actual en la recursión
+ * @param activo Activo a insertar
+ * @return Nuevo nodo raíz del subárbol modificado
+ */
 std::shared_ptr<AVL::Nodo> AVL::insertarRec(std::shared_ptr<Nodo> nodo, const Activo &activo)
 {
     if (!nodo)
@@ -85,11 +111,21 @@ std::shared_ptr<AVL::Nodo> AVL::insertarRec(std::shared_ptr<Nodo> nodo, const Ac
     return nodo;
 }
 
+/**
+ * Inserta un nuevo activo en el árbol AVL
+ * @param activo Activo a insertar
+ */
 void AVL::insertar(const Activo &activo)
 {
     raiz = insertarRec(raiz, activo);
 }
 
+/**
+ * Función recursiva auxiliar para buscar un activo por su ID
+ * @param nodo Nodo actual en la recursión
+ * @param id ID del activo a buscar
+ * @return Puntero al nodo encontrado o nullptr si no existe
+ */
 std::shared_ptr<AVL::Nodo> AVL::buscarRec(std::shared_ptr<Nodo> nodo, const std::string &id)
 {
     if (!nodo || nodo->activo.getId() == id)
@@ -101,12 +137,22 @@ std::shared_ptr<AVL::Nodo> AVL::buscarRec(std::shared_ptr<Nodo> nodo, const std:
     return buscarRec(nodo->derecho, id);
 }
 
+/**
+ * Busca un activo por su ID en el árbol
+ * @param id ID del activo a buscar
+ * @return Puntero al activo encontrado o nullptr si no existe
+ */
 Activo *AVL::buscar(const std::string &id)
 {
     auto nodo = buscarRec(raiz, id);
     return nodo ? &(nodo->activo) : nullptr;
 }
 
+/**
+ * Recorre el árbol en orden (inorden) de forma recursiva
+ * Imprime solo los activos que no están rentados
+ * @param nodo Nodo actual en la recursión
+ */
 void AVL::inordenRec(std::shared_ptr<Nodo> nodo) const
 {
     if (nodo)
@@ -118,11 +164,18 @@ void AVL::inordenRec(std::shared_ptr<Nodo> nodo) const
     }
 }
 
+/**
+ * Inicia el recorrido inorden del árbol
+ */
 void AVL::inorden() const
 {
     inordenRec(raiz);
 }
 
+/**
+ * Genera la representación DOT del árbol para visualización
+ * @param out Stream de salida donde se escribirá el código DOT
+ */
 void AVL::generarDot(std::ostream &out) const
 {
     out << "digraph G {\n";
@@ -137,6 +190,11 @@ void AVL::generarDot(std::ostream &out) const
     out << "}\n";
 }
 
+/**
+ * Función auxiliar recursiva para generar el código DOT
+ * @param out Stream de salida
+ * @param nodo Nodo actual en la recursión
+ */
 void AVL::generarDotRecursivo(std::ostream &out, std::shared_ptr<Nodo> nodo) const
 {
     if (!nodo)
@@ -163,6 +221,11 @@ void AVL::generarDotRecursivo(std::ostream &out, std::shared_ptr<Nodo> nodo) con
     }
 }
 
+/**
+ * Encuentra el nodo con el valor mínimo en un subárbol
+ * @param nodo Raíz del subárbol
+ * @return Puntero al nodo con el valor mínimo
+ */
 std::shared_ptr<AVL::Nodo> AVL::getNodoMinimo(std::shared_ptr<Nodo> nodo)
 {
     std::shared_ptr<Nodo> actual = nodo;
@@ -173,6 +236,12 @@ std::shared_ptr<AVL::Nodo> AVL::getNodoMinimo(std::shared_ptr<Nodo> nodo)
     return actual;
 }
 
+/**
+ * Función recursiva auxiliar para eliminar un nodo del árbol
+ * @param nodo Nodo actual en la recursión
+ * @param id ID del activo a eliminar
+ * @return Nuevo nodo raíz del subárbol modificado
+ */
 std::shared_ptr<AVL::Nodo> AVL::eliminarRec(std::shared_ptr<Nodo> nodo, const std::string &id)
 {
     if (!nodo)
@@ -238,11 +307,19 @@ std::shared_ptr<AVL::Nodo> AVL::eliminarRec(std::shared_ptr<Nodo> nodo, const st
     return nodo;
 }
 
+/**
+ * Elimina un activo del árbol por su ID
+ * @param id ID del activo a eliminar
+ */
 void AVL::eliminar(const std::string &id)
 {
     raiz = eliminarRec(raiz, id);
 }
 
+/**
+ * Función recursiva auxiliar para fusionar dos árboles AVL
+ * @param nodo Nodo actual del árbol a fusionar
+ */
 void AVL::fusionarRec(std::shared_ptr<Nodo> nodo)
 {
     if (!nodo)
@@ -256,6 +333,10 @@ void AVL::fusionarRec(std::shared_ptr<Nodo> nodo)
     fusionarRec(nodo->derecho);
 }
 
+/**
+ * Fusiona otro árbol AVL con el árbol actual
+ * @param otroArbol Árbol AVL a fusionar con el actual
+ */
 void AVL::fusionar(AVL &otroArbol)
 {
     if (otroArbol.estaVacio())

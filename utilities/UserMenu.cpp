@@ -1,3 +1,8 @@
+/**
+ * @file UserMenu.cpp
+ * @brief Implementación del menú de usuario y sus funcionalidades
+ */
+
 #include "UserMenu.h"
 #include "../classes/Activo.h"
 #include "../classes/MatrizDispersa.h"
@@ -5,14 +10,27 @@
 #include "../classes/CircleDoubleLinkedList.h"
 #include <iostream>
 
-// Definir códigos de colores
+// Definición de códigos de color para la interfaz
 #define RESET "\033[0m"
 #define GREEN "\033[32m"
 #define BLUE "\033[34m"
 #define RED "\033[31m"
 
-void mostrarMenuUsuario(
-    Usuario *usuario)
+/**
+ * @brief Implementa la funcionalidad completa del menú de usuario
+ * @param usuario Puntero al usuario logueado
+ * 
+ * Opciones disponibles:
+ * 1. Agregar Activo
+ * 2. Eliminar Activo
+ * 3. Modificar Activo
+ * 4. Rentar Activo
+ * 5. Ver Activos Rentados
+ * 6. Ver Mis Activos Rentados
+ * 7. Devolver Activo
+ * 8. Cerrar Sesión
+ */
+void mostrarMenuUsuario(Usuario *usuario)
 {
     int opcion;
     std::string nombre;

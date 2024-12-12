@@ -1,3 +1,12 @@
+/**
+ * @file MatrizDispersa.cpp
+ * @brief Implementación de una matriz dispersa para gestionar usuarios en empresas y departamentos
+ * 
+ * Esta clase implementa una matriz dispersa que permite organizar usuarios
+ * en una estructura bidimensional donde las filas representan empresas y
+ * las columnas representan departamentos. Utiliza el patrón Singleton.
+ */
+
 #include "MatrizDispersa.h"
 #include <iostream>
 
@@ -9,14 +18,22 @@ Nodo::Nodo(const std::shared_ptr<Usuario> &usuario)
     : usuario(usuario), izquierda(nullptr), derecha(nullptr),
       arriba(nullptr), abajo(nullptr), adelante(nullptr), atras(nullptr) {}
 
-// Constructor de NodoCabecera
+/**
+ * @brief Constructor de la clase NodoCabecera
+ * @param nombre Identificador del nodo cabecera (empresa o departamento)
+ */
 NodoCabecera::NodoCabecera(const std::string &nombre)
     : nombre(nombre), siguiente(nullptr), primerNodo(nullptr) {}
 
-// Constructor privado de MatrizDispersa
+/**
+ * @brief Constructor privado de MatrizDispersa (patrón Singleton)
+ */
 MatrizDispersa::MatrizDispersa() : primerFila(nullptr), primerColumna(nullptr) {}
 
-// Función estática para obtener la instancia única
+/**
+ * @brief Obtiene la instancia única de la matriz dispersa
+ * @return Puntero compartido a la instancia única
+ */
 std::shared_ptr<MatrizDispersa> MatrizDispersa::obtenerInstancia()
 {
     if (instancia == nullptr)
@@ -58,15 +75,23 @@ void MatrizDispersa::insertar(const std::string &empresa, const std::string &dep
     // Crear o encontrar la fila (empresa)
     auto actualFila = primerFila;
     std::shared_ptr<NodoCabecera> filaAnterior = nullptr;
+    
+    // Recorrer las filas hasta encontrar la posición correcta (actualFila->nombre < empresa se usa para comparar strings) 
     while (actualFila && actualFila->nombre < empresa)
     {
         filaAnterior = actualFila;
         actualFila = actualFila->siguiente;
     }
+    
+    
+    // Si no existe la fila o no es la misma empresa, crear una nueva fila
     if (!actualFila || actualFila->nombre != empresa)
     {
+        // Crear un nuevo nodo cabecera para la empresa
         auto nuevaFila = std::make_shared<NodoCabecera>(empresa);
         nuevaFila->siguiente = actualFila;
+        
+        
         if (filaAnterior)
             filaAnterior->siguiente = nuevaFila;
         else
@@ -175,6 +200,10 @@ void MatrizDispersa::insertar(const std::string &empresa, const std::string &dep
     }
 }
 
+/**
+ * @brief Genera una representación gráfica de la matriz en formato DOT
+ * @param out Stream de salida donde se escribirá el código DOT
+ */
 void MatrizDispersa::generarDot(std::ostream &out)
 {
     const auto NODE_STYLE = R"(width=1.5; style=filled)";
@@ -340,6 +369,12 @@ void MatrizDispersa::generarNodos(std::ostream &out, const std::string &NODE_STY
     }
 }
 
+/**
+ * @brief Busca un nodo en una posición específica de la matriz
+ * @param nodoFila Nodo inicial de la fila
+ * @param nodoCol Nodo inicial de la columna 
+ * @return Puntero al nodo encontrado o nullptr si no existe
+ */
 Nodo *MatrizDispersa::buscarNodoEnPosicion(const std::shared_ptr<Nodo> &nodoFila, const std::shared_ptr<Nodo> &nodoCol)
 {
     auto actual = nodoFila;
@@ -380,6 +415,13 @@ Nodo *MatrizDispersa::buscarNodoEnPosicionPorDepartamentoEmpresa(const std::stri
     return nullptr;
 }
 
+/**
+ * @brief Busca un usuario por su nombre en una posición específica
+ * @param nombre Nombre del usuario a buscar
+ * @param departamento Departamento donde buscar
+ * @param empresa Empresa donde buscar
+ * @return Puntero al usuario encontrado o nullptr si no existe
+ */
 Usuario *MatrizDispersa::buscarUsuarioPorNombre(const std::string &nombre, const std::string &departamento, const std::string &empresa)
 {
     // Buscar nodo empresa
@@ -396,6 +438,10 @@ Usuario *MatrizDispersa::buscarUsuarioPorNombre(const std::string &nombre, const
     return nullptr;
 }
 
+/**
+ * @brief Muestra los activos de todos los usuarios excepto uno específico
+ * @param userId ID del usuario cuyos activos no se mostrarán
+ */
 void MatrizDispersa::mostrarActivosDeMatriz(
     int userId)
 {
@@ -424,6 +470,11 @@ void MatrizDispersa::mostrarActivosDeMatriz(
     }
 }
 
+/**
+ * @brief Busca un activo específico en toda la matriz
+ * @param idActivo Identificador del activo a buscar
+ * @return Puntero al activo encontrado o nullptr si no existe
+ */
 Activo *MatrizDispersa::buscarActivosDeMatriz(const std::string &idActivo)
 {
     auto filaActual = primerFila;
@@ -454,6 +505,11 @@ Activo *MatrizDispersa::buscarActivosDeMatriz(const std::string &idActivo)
     return nullptr;
 }
 
+/**
+ * @brief Genera un árbol AVL con los activos de una empresa específica
+ * @param empresa Nombre de la empresa
+ * @return Puntero al árbol AVL generado
+ */
 AVL *MatrizDispersa::arbolAVLEmpresas(const std::string &empresa)
 {
     auto actualFila = primerFila;
@@ -494,6 +550,11 @@ AVL *MatrizDispersa::arbolAVLEmpresas(const std::string &empresa)
     return arbol;
 }
 
+/**
+ * @brief Genera un árbol AVL con los activos de un departamento específico
+ * @param departamento Nombre del departamento
+ * @return Puntero al árbol AVL generado
+ */
 AVL *MatrizDispersa::arbolAVLDepartamentos(const std::string &departamento)
 {
     auto actualCol = primerColumna;

@@ -9,24 +9,34 @@
 #include <iostream>
 #include <fstream>
 
-// Definir códigos de colores
+// Definición de códigos de colores ANSI para la consola
 #define RESET "\033[0m"
 #define GREEN "\033[32m"
 #define BLUE "\033[34m"
 #define RED "\033[31m"
 
+/**
+ * @brief Muestra y gestiona el menú principal del administrador
+ * 
+ * Esta función implementa la interfaz principal del administrador, permitiendo:
+ * - Gestión de usuarios
+ * - Generación de reportes varios
+ * - Gestión de activos
+ * - Ordenamiento de transacciones
+ */
 void mostrarMenuAdmin()
 {
-    int opcion;
+    // Inicialización de archivos para reportes
     std::ofstream archivoEmpresa("reportes/reporte_empresa.dot");
     std::ofstream archivoDepartamento("reportes/reporte_departamento.dot");
     std::ofstream archivoTransacciones("reportes/reporte_transacciones.dot");
     std::ofstream archivoActivosUsuario("reportes/reporte_activos_usuario.dot");
     std::ofstream archivoActivosRentados("reportes/reporte_activos_rentados.dot");
+    int opcion;
 
     do
     {
-
+        // Mostrar menú principal
         std::cout << BLUE << "------------------ Menu Administrador ------------------" << RESET << std::endl;
         std::cout << RESET << "1. Registrar Usuario" << std::endl;
         std::cout << "2. Reporte Matriz Dispersa" << std::endl;
@@ -42,60 +52,49 @@ void mostrarMenuAdmin()
 
         switch (opcion)
         {
-        case 1:
+        case 1: // Registrar Usuario
             add_user();
-
             break;
-        case 2:
+
+        case 2: // Reporte Matriz Dispersa
             std::cout << GREEN << "Reporte Matriz Dispersa" << RESET << std::endl;
-
             reporte_matriz();
-
             break;
-        case 3:
+
+        case 3: // Reporte Activos por Departamento
             std::cout << GREEN << "Reporte Activos Disponibles de un Departamento" << RESET << std::endl;
-
-            // Guardar en reportes/departamento.dot
-
-            // Preguntar por el departamento
-
             if (archivoDepartamento.is_open())
             {
+                // Solicitar información del departamento
                 std::string departamento;
-
                 std::cout << "Ingrese el nombre del departamento: ";
                 std::cin.ignore();
                 std::getline(std::cin, departamento);
 
+                // Generar y guardar el reporte
                 MatrizDispersa::obtenerInstancia()->arbolAVLDepartamentos(departamento)->generarDot(archivoDepartamento);
                 archivoDepartamento.close();
 
-                // Convertir archivo a PNG
+                // Convertir a PNG usando GraphViz
                 int result = system("dot -Tpng reportes/reporte_departamento.dot -o reportes/reporte_departamento.png");
                 if (result != 0)
                 {
                     std::cerr << "Error al ejecutar el comando dot. Código de error: " << result << std::endl;
                 }
-
                 std::cout << "Reporte generado exitosamente" << std::endl;
             }
             else
             {
                 std::cerr << "Error al abrir el archivo para escribir" << std::endl;
             }
-
             break;
-        case 4:
+
+        case 4: // Reporte Activos Disponibles de una Empresa
             std::cout << GREEN << "Reporte Activos Disponibles de una Empresa" << RESET << std::endl;
-
-            // Guardar en reportes/empresa.dot
-
             if (archivoEmpresa.is_open())
             {
-
                 // Preguntar por la empresa
                 std::string empresa;
-
                 std::cout << "Ingrese el nombre de la empresa: ";
                 std::cin.ignore();
                 std::getline(std::cin, empresa);
@@ -109,18 +108,16 @@ void mostrarMenuAdmin()
                 {
                     std::cerr << "Error al ejecutar el comando dot. Código de error: " << result << std::endl;
                 }
-
                 std::cout << "Reporte generado exitosamente" << std::endl;
             }
             else
             {
                 std::cerr << "Error al abrir el archivo para escribir" << std::endl;
             }
-
             break;
-        case 5:
-            std::cout << GREEN << "Reporte Transacciones" << RESET << std::endl;
 
+        case 5: // Reporte Transacciones
+            std::cout << GREEN << "Reporte Transacciones" << RESET << std::endl;
             if (archivoTransacciones.is_open())
             {
                 CircleDoubleLinkedList::getInstance()->generarDot(archivoTransacciones);
@@ -132,18 +129,16 @@ void mostrarMenuAdmin()
                 {
                     std::cerr << "Error al ejecutar el comando dot. Código de error: " << result << std::endl;
                 }
-
                 std::cout << "Reporte generado exitosamente" << std::endl;
             }
             else
             {
                 std::cerr << "Error al abrir el archivo para escribir" << std::endl;
             }
-
             break;
-        case 6:
-            std::cout << GREEN << "Reporte activos de un usuario" << RESET << std::endl;
 
+        case 6: // Reporte activos de un usuario
+            std::cout << GREEN << "Reporte activos de un usuario" << RESET << std::endl;
             if (archivoActivosUsuario.is_open())
             {
                 std::string nombreUsuario;
@@ -173,7 +168,6 @@ void mostrarMenuAdmin()
                     {
                         std::cerr << "Error al ejecutar el comando dot. Código de error: " << result << std::endl;
                     }
-
                     std::cout << "Reporte generado exitosamente" << std::endl;
                 }
                 else
@@ -185,11 +179,10 @@ void mostrarMenuAdmin()
             {
                 std::cerr << "Error al abrir el archivo para escribir" << std::endl;
             }
-
             break;
-        case 7:
-            std::cout << GREEN << "Activos rentados por un usuario" << RESET << std::endl;
 
+        case 7: // Activos rentados por un usuario
+            std::cout << GREEN << "Activos rentados por un usuario" << RESET << std::endl;
             if (archivoActivosRentados.is_open())
             {
                 std::string nombreUsuario;
@@ -213,7 +206,6 @@ void mostrarMenuAdmin()
                 if (usuario)
                 {
                     CircleDoubleLinkedList::getInstance()->getRentedAssets(usuario->id)->generarDot(archivoActivosRentados);
-
                     archivoActivosRentados.close();
 
                     // Convertir archivo a PNG
@@ -228,18 +220,15 @@ void mostrarMenuAdmin()
             {
                 std::cerr << "Error al abrir el archivo para escribir" << std::endl;
             }
-
             break;
-        case 8:
-            std::cout << GREEN << "Ordenar transacciones" << RESET << std::endl;
 
+        case 8: // Ordenar transacciones
+            std::cout << GREEN << "Ordenar transacciones" << RESET << std::endl;
             std::cout << "1. Ordenar de forma ascendente" << std::endl;
             std::cout << "2. Ordenar de forma descendente" << std::endl;
 
             int orden;
-
             std::cout << "Ingrese una opcion: ";
-
             std::cin >> orden;
 
             if (orden == 1)
@@ -250,16 +239,13 @@ void mostrarMenuAdmin()
             {
                 CircleDoubleLinkedList::getInstance()->ordenarTransacciones(true);
             }
-            else
-            {
-                std::cout << RED << "Opcion invalida. Intente de nuevo." << RESET << std::endl;
-            }
-
             break;
-        case 9:
+
+        case 9: // Salir
             std::cout << GREEN << "Saliendo del menu..." << RESET << std::endl;
             break;
-        default:
+
+        default: // Opción inválida
             std::cout << RED << "Opcion invalida. Intente de nuevo." << RESET << std::endl;
             break;
         }
