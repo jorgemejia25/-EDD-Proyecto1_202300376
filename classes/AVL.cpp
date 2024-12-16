@@ -203,7 +203,13 @@ void AVL::generarDotRecursivo(std::ostream &out, std::shared_ptr<Nodo> nodo) con
     // Generar el nodo actual
     out << "    \"" << nodo->activo.getId() << "\" [label=\"ID: "
         << nodo->activo.getId() << "\\n"
-        << nodo->activo.getNombre() << "\"];\n";
+        << "Nombre: "
+        << nodo->activo.getNombre() << "\\n"
+        << "Descripción: "
+        << nodo->activo.getDescripcion() << "\\n"
+        << "Rentado: "
+        << nodo->activo.getRentado()
+        << "\"];\n";
 
     // Generar conexiones con hijos
     if (nodo->izquierdo)

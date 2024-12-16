@@ -259,7 +259,12 @@ void CircleDoubleLinkedList::generarDot(std::ostream &out)
     {
         if (current->data->getStatus())
         {
-            out << "    \"" << current->data->getId() << "\" [label=\"" << current->data->getAsset()->getNombre() << "\"];\n";
+            out << "    \"" << current->data->getId() << "\" [label=\""
+                << current->data->getAsset()->getNombre() << "\\n"
+                << "Usuario: " << current->data->getUser()->Nombre << "\\n"
+                << "Dias: " << current->data->getDays() << "\\n"
+                << "Estado: " << (current->data->getStatus() ? "Activo" : "Devuelto")
+                << "\"];\n";
             if (current->next->data->getStatus())
             {
                 out << "    \"" << current->data->getId() << "\" -> \"" << current->next->data->getId() << "\" [constraint=false];\n";
