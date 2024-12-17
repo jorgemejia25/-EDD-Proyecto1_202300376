@@ -19,7 +19,7 @@
 /**
  * @brief Implementa la funcionalidad completa del menú de usuario
  * @param usuario Puntero al usuario logueado
- * 
+ *
  * Opciones disponibles:
  * 1. Agregar Activo
  * 2. Eliminar Activo
@@ -36,6 +36,7 @@ void mostrarMenuUsuario(Usuario *usuario)
     std::string nombre;
     std::string descripcion;
     std::string idActivo;
+    int maxDias;
     Activo *activo;
     Activo *activoRentado;
     Transaction *transaccion;
@@ -67,8 +68,11 @@ void mostrarMenuUsuario(Usuario *usuario)
             std::cout << "Ingrese la descripción del activo: ";
             std::getline(std::cin, descripcion);
 
+            std::cout << "Ingrese el número máximo de días a rentar: ";
+            std::cin >> maxDias;
+
             // Crear activo
-            activo = new Activo(nombre, descripcion);
+            activo = new Activo(nombre, descripcion, maxDias);
             activo->setIdUsuario(usuario->id);
 
             // Agregar activo al usuario
@@ -148,6 +152,12 @@ void mostrarMenuUsuario(Usuario *usuario)
 
             if (activoRentado && !activoRentado->getRentado())
             {
+
+                if (dias > activoRentado->getMaxDias())
+                {
+                    std::cout << RED << "No se puede rentar por más de " << activoRentado->getMaxDias() << " días." << RESET << std::endl;
+                    break;
+                }
 
                 transaccion = new Transaction(usuario, activoRentado, dias);
 

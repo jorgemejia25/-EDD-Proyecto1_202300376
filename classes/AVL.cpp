@@ -208,6 +208,7 @@ void AVL::generarDotRecursivo(std::ostream &out, std::shared_ptr<Nodo> nodo) con
     out << "        <TR><TD><B>Nombre:</B> " << nodo->activo.getNombre() << "</TD></TR>\n";
     out << "        <TR><TD><B>Descripción:</B> " << nodo->activo.getDescripcion() << "</TD></TR>\n";
     out << "        <TR><TD><B>Rentado:</B> " << nodo->activo.getRentado() << "</TD></TR>\n";
+    out << "        <TR><TD><B>Max Días:</B> " << nodo->activo.getMaxDias() << "</TD></TR>\n";
     out << "    </TABLE>>];\n";
 
     // Generar conexiones con hijos

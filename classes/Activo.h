@@ -17,14 +17,16 @@ private:
     std::string descripcion; ///< Descripción detallada del activo
     bool rentado;            ///< Estado de renta del activo
     int idUsuario;           ///< ID del usuario que tiene rentado el activo
+    int maxDias;             ///< Número máximo de días que el activo puede ser rentado
 
 public:
     /**
      * @brief Constructor de la clase Activo
      * @param _nombre Nombre del activo
      * @param _descripcion Descripción del activo
+     * @param _maxDias Número máximo de días que el activo puede ser rentado
      */
-    Activo(const std::string &_nombre, const std::string &_descripcion);
+    Activo(const std::string &_nombre, const std::string &_descripcion, int _maxDias);
 
     /**
      * @brief Obtiene el ID del activo
@@ -85,6 +87,18 @@ public:
      * @param _rentado Nuevo estado de renta
      */
     void setRentado(bool _rentado);
+
+    /**
+     * @brief Obtiene el número máximo de días que el activo puede ser rentado
+     * @return Número máximo de días
+     */
+    int getMaxDias() const;
+
+    /**
+     * @brief Establece el número máximo de días que el activo puede ser rentado
+     * @param _maxDias Nuevo número máximo de días
+     */
+    void setMaxDias(int _maxDias);
 
     /**
      * @brief Convierte la información del activo a string

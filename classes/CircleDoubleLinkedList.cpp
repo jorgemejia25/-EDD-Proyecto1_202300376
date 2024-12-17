@@ -179,6 +179,7 @@ void CircleDoubleLinkedList::printInactiveTransactions(int userId)
             std::cout << "ID Activo: " << current->data->getId() << std::endl;
             std::cout << "Activo: " << current->data->getAsset()->getNombre() << std::endl;
             std::cout << "Dias: " << current->data->getDays() << std::endl;
+            std::cout << "Max Días: " << current->data->getAsset()->getMaxDias() << std::endl;
             std::cout << "" << std::endl;
             foundInactive = true;
         }
@@ -228,8 +229,10 @@ void CircleDoubleLinkedList::printMyTransactions(int userId)
             std::cout << "ID Activo: " << current->data->getAsset()->getId() << std::endl;
             std::cout << "Usuario: " << current->data->getUser()->Nombre << std::endl;
             std::cout << "Activo: " << current->data->getAsset()->getNombre() << std::endl;
+            std::cout << "Max Días: " << current->data->getAsset()->getMaxDias() << std::endl;
             std::cout << "Dias: " << current->data->getDays() << std::endl;
             std::cout << "Estado: " << (current->data->getStatus() ? "Activo" : "Devuelto") << std::endl;
+
             std::cout << "------------------------" << std::endl;
             foundTransaction = true;
         }

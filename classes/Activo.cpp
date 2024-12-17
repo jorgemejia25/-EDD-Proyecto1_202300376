@@ -35,9 +35,10 @@ std::string generarIdAlfanumerico()
  * @brief Constructor de la clase Activo
  * @param _nombre Nombre del activo
  * @param _descripcion Descripción detallada del activo
+ * @param _maxDias Número máximo de días que el activo puede ser rentado
  */
-Activo::Activo(const std::string &_nombre, const std::string &_descripcion)
-    : nombre(_nombre), descripcion(_descripcion)
+Activo::Activo(const std::string &_nombre, const std::string &_descripcion, int _maxDias)
+    : nombre(_nombre), descripcion(_descripcion), maxDias(_maxDias)
 {
     id = generarIdAlfanumerico();
     rentado = false;
@@ -89,6 +90,15 @@ bool Activo::getRentado() const
     return rentado;
 }
 
+/**
+ * @brief Obtiene el número máximo de días que el activo puede ser rentado
+ * @return Número máximo de días
+ */
+int Activo::getMaxDias() const
+{
+    return maxDias;
+}
+
 // Setters
 /**
  * @brief Establece el ID del activo
@@ -136,6 +146,15 @@ void Activo::setIdUsuario(const int &_idUsuario)
 }
 
 /**
+ * @brief Establece el número máximo de días que el activo puede ser rentado
+ * @param _maxDias Nuevo número máximo de días
+ */
+void Activo::setMaxDias(int _maxDias)
+{
+    maxDias = _maxDias;
+}
+
+/**
  * @brief Genera una representación en string del activo
  * @return String con la información del activo en formato legible
  */
@@ -144,6 +163,8 @@ std::string Activo::toString() const
     std::stringstream ss;
     ss << "ID: " << id << "\n"
        << "Nombre: " << nombre << "\n"
-       << "Descripción: " << descripcion;
+       << "Descripción: " << descripcion << "\n"
+       << "Rentado: " << (rentado ? "Sí" : "No") << "\n"
+       << "Máx. Días: " << maxDias;
     return ss.str();
 }

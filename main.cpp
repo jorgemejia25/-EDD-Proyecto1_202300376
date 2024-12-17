@@ -47,35 +47,35 @@ int main()
     matriz->insertar("cinepolis", "peten", usuario_mafer);
 
     // Agregar activos a elian_estrada
-    usuario_elian->agregarActivo(Activo("Madera", "madera para albañil"));
-    usuario_elian->agregarActivo(Activo("Martillos", "martillos para madera"));
-    usuario_elian->agregarActivo(Activo("Caladora", "caladora para cortar maderas prefabricadas"));
-    usuario_elian->agregarActivo(Activo("Barreno", "barreno para concreto"));
+    usuario_elian->agregarActivo(Activo("Madera", "madera para albañil", 20));
+    usuario_elian->agregarActivo(Activo("Martillos", "martillos para madera", 10));
+    usuario_elian->agregarActivo(Activo("Caladora", "caladora para cortar maderas prefabricadas", 15));
+    usuario_elian->agregarActivo(Activo("Barreno", "barreno para concreto", 5));
 
     // Agregar activos a casimiro
-    usuario_casimiro->agregarActivo(Activo("Balanza", "balanza con maximo de 25kg"));
-    usuario_casimiro->agregarActivo(Activo("Canastas", "canastas para frutas y verduras"));
-    usuario_casimiro->agregarActivo(Activo("Linternas", "linternas para alumbrar cuartos oscuros"));
-    usuario_casimiro->agregarActivo(Activo("Cargadores", "cargadores de telefonos tipo c"));
-    usuario_casimiro->agregarActivo(Activo("Cables", "cables de todo tipo"));
-    usuario_casimiro->agregarActivo(Activo("Lazos", "lazos para tender ropa"));
+    usuario_casimiro->agregarActivo(Activo("Balanza", "balanza con maximo de 25kg", 15));
+    usuario_casimiro->agregarActivo(Activo("Canastas", "canastas para frutas y verduras", 45));
+    usuario_casimiro->agregarActivo(Activo("Linternas", "linternas para alumbrar cuartos oscuros", 10));
+    usuario_casimiro->agregarActivo(Activo("Cargadores", "cargadores de telefonos tipo c", 5));
+    usuario_casimiro->agregarActivo(Activo("Cables", "cables de todo tipo", 10));
+    usuario_casimiro->agregarActivo(Activo("Lazos", "lazos para tender ropa", 20));
 
     // Agregar activos a fuego03
-    usuario_fuego->agregarActivo(Activo("Termos", "pequeños termos para bebidas calientes"));
-    usuario_fuego->agregarActivo(Activo("Maletas", "maletas desde pequeñas a grandes"));
-    usuario_fuego->agregarActivo(Activo("Peliculas", "todo tipo de peliculas de accion"));
+    usuario_fuego->agregarActivo(Activo("Termos", "pequeños termos para bebidas calientes", 10));
+    usuario_fuego->agregarActivo(Activo("Maletas", "maletas desde pequeñas a grandes", 15));
+    usuario_fuego->agregarActivo(Activo("Peliculas", "todo tipo de peliculas de accion", 5));
 
     // Agregar activos a incrediboy
-    usuario_incrediboy->agregarActivo(Activo("Casest", "casets con musica de todo tipo"));
-    usuario_incrediboy->agregarActivo(Activo("Pantallas", "pantallas para proyección"));
-    usuario_incrediboy->agregarActivo(Activo("Cañonera", "cañonera para proyeccion"));
-    usuario_incrediboy->agregarActivo(Activo("Toldo", "toldo para eventos al exterior"));
+    usuario_incrediboy->agregarActivo(Activo("Casest", "casets con musica de todo tipo", 5));
+    usuario_incrediboy->agregarActivo(Activo("Pantallas", "pantallas para proyección", 10));
+    usuario_incrediboy->agregarActivo(Activo("Cañonera", "cañonera para proyeccion", 10));
+    usuario_incrediboy->agregarActivo(Activo("Toldo", "toldo para eventos al exterior", 5));
 
     // Agregar activos a mafer
-    usuario_mafer->agregarActivo(Activo("Audifonos", "audifonos para grabaciones de estudio"));
-    usuario_mafer->agregarActivo(Activo("Microfonos", "microfonos de todo tipo"));
-    usuario_mafer->agregarActivo(Activo("Pedestales", "pedestales para microfonos grandes y pequeños"));
-    usuario_mafer->agregarActivo(Activo("Atriles", "atriles para colocar ojas con gancho"));
+    usuario_mafer->agregarActivo(Activo("Audifonos", "audifonos para grabaciones de estudio", 10));
+    usuario_mafer->agregarActivo(Activo("Microfonos", "microfonos de todo tipo", 8));
+    usuario_mafer->agregarActivo(Activo("Pedestales", "pedestales para microfonos grandes y pequeños", 12));
+    usuario_mafer->agregarActivo(Activo("Atriles", "atriles para colocar ojas con gancho", 14));
 
     login();
 }
