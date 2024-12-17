@@ -1,7 +1,7 @@
 /**
  * @file MatrizDispersa.cpp
  * @brief Implementación de una matriz dispersa para gestionar usuarios en empresas y departamentos
- * 
+ *
  * Esta clase implementa una matriz dispersa que permite organizar usuarios
  * en una estructura bidimensional donde las filas representan empresas y
  * las columnas representan departamentos. Utiliza el patrón Singleton.
@@ -72,132 +72,128 @@ void MatrizDispersa::insertar(const std::string &empresa, const std::string &dep
         return;
     }
 
-    // Crear o encontrar la fila (empresa)
     auto actualFila = primerFila;
     std::shared_ptr<NodoCabecera> filaAnterior = nullptr;
-    
-    // Recorrer las filas hasta encontrar la posición correcta (actualFila->nombre < empresa se usa para comparar strings) 
+
     while (actualFila && actualFila->nombre < empresa)
     {
         filaAnterior = actualFila;
         actualFila = actualFila->siguiente;
     }
-    
-    
-    // Si no existe la fila o no es la misma empresa, crear una nueva fila
+
     if (!actualFila || actualFila->nombre != empresa)
     {
-        // Crear un nuevo nodo cabecera para la empresa
         auto nuevaFila = std::make_shared<NodoCabecera>(empresa);
-        nuevaFila->siguiente = actualFila;
-        
-        
         if (filaAnterior)
+        {
+            nuevaFila->siguiente = actualFila;
             filaAnterior->siguiente = nuevaFila;
+        }
         else
+        {
+            nuevaFila->siguiente = primerFila;
             primerFila = nuevaFila;
+        }
         actualFila = nuevaFila;
     }
 
-    // Crear o encontrar la columna (departamento)
+    // 2. Insertar columna (departamento) ordenadamente
     auto actualColumna = primerColumna;
     std::shared_ptr<NodoCabecera> columnaAnterior = nullptr;
+
     while (actualColumna && actualColumna->nombre < departamento)
     {
         columnaAnterior = actualColumna;
         actualColumna = actualColumna->siguiente;
     }
+
     if (!actualColumna || actualColumna->nombre != departamento)
     {
         auto nuevaColumna = std::make_shared<NodoCabecera>(departamento);
-        nuevaColumna->siguiente = actualColumna;
         if (columnaAnterior)
+        {
+            nuevaColumna->siguiente = actualColumna;
             columnaAnterior->siguiente = nuevaColumna;
+        }
         else
+        {
+            nuevaColumna->siguiente = primerColumna;
             primerColumna = nuevaColumna;
+        }
         actualColumna = nuevaColumna;
     }
 
-    // Crear el nodo para almacenar la persona
+    // 3. Insertar el nuevo nodo en la fila (ordenado por ID)
+    auto actualNodoFila = actualFila->primerNodo;
+    std::shared_ptr<Nodo> anteriorFila = nullptr;
 
-    // Insertar en la fila (horizontalmente)
-    auto actual = actualFila->primerNodo;
-    std::shared_ptr<Nodo> anterior = nullptr;
-    while (actual && actual->usuario->id < usuario->id) // Cambio de Nombre a id
+    while (actualNodoFila && actualNodoFila->usuario->id < usuario->id)
     {
-        anterior = actual;
-        actual = actual->derecha;
+        anteriorFila = actualNodoFila;
+        actualNodoFila = actualNodoFila->derecha;
     }
-    if (!anterior)
+
+    // Conectar horizontalmente
+    if (!anteriorFila)
     {
-        nuevoNodo->derecha = actual;
-        if (actual)
-            actual->izquierda = nuevoNodo;
+        nuevoNodo->derecha = actualFila->primerNodo;
+        if (actualFila->primerNodo)
+            actualFila->primerNodo->izquierda = nuevoNodo;
         actualFila->primerNodo = nuevoNodo;
     }
     else
     {
-        nuevoNodo->derecha = actual;
-        nuevoNodo->izquierda = anterior;
-        anterior->derecha = nuevoNodo;
-        if (actual)
-            actual->izquierda = nuevoNodo;
+        nuevoNodo->derecha = anteriorFila->derecha;
+        nuevoNodo->izquierda = anteriorFila;
+        anteriorFila->derecha = nuevoNodo;
+        if (nuevoNodo->derecha)
+            nuevoNodo->derecha->izquierda = nuevoNodo;
     }
 
-    // Insertar en la columna (verticalmente)
-    actual = actualColumna->primerNodo;
-    anterior = nullptr;
-    bool insertado = false;
+    // 4. Insertar el nuevo nodo en la columna (ordenado por empresa)
+    auto actualNodoColumna = actualColumna->primerNodo;
+    std::shared_ptr<Nodo> anteriorColumna = nullptr;
 
-    // Buscar la posición correcta dentro de la columna actual y el empresa correspondiente
-    while (actual)
+    while (actualNodoColumna &&
+           buscarFilaPorNodo(actualNodoColumna)->nombre < empresa)
     {
-        // Verificar si estamos en el empresa correcto
-        auto nodoFila = actualFila->primerNodo;
-        while (nodoFila)
-        {
-            if (nodoFila == actual)
-            {
-                // Estamos en el empresa correcto, insertar aquí
-                nuevoNodo->abajo = actual;
-                nuevoNodo->arriba = anterior;
-                if (anterior)
-                {
-                    anterior->abajo = nuevoNodo;
-                }
-                else
-                {
-                    actualColumna->primerNodo = nuevoNodo;
-                }
-                if (actual)
-                {
-                    actual->arriba = nuevoNodo;
-                }
-                insertado = true;
-                break;
-            }
-            nodoFila = nodoFila->derecha;
-        }
-        if (insertado)
-            break;
-
-        anterior = actual;
-        actual = actual->abajo;
+        anteriorColumna = actualNodoColumna;
+        actualNodoColumna = actualNodoColumna->abajo;
     }
 
-    // Si no se insertó en ninguna posición intermedia, agregar al final
-    if (!insertado)
+    // Conectar verticalmente
+    if (!anteriorColumna)
     {
-        if (anterior)
-        {
-            anterior->abajo = nuevoNodo;
-            nuevoNodo->arriba = anterior;
-        }
-        else
-        {
-            actualColumna->primerNodo = nuevoNodo;
-        }
+        nuevoNodo->abajo = actualColumna->primerNodo;
+        if (actualColumna->primerNodo)
+            actualColumna->primerNodo->arriba = nuevoNodo;
+        actualColumna->primerNodo = nuevoNodo;
     }
+    else
+    {
+        nuevoNodo->abajo = anteriorColumna->abajo;
+        nuevoNodo->arriba = anteriorColumna;
+        anteriorColumna->abajo = nuevoNodo;
+        if (nuevoNodo->abajo)
+            nuevoNodo->abajo->arriba = nuevoNodo;
+    }
+}
+
+std::shared_ptr<NodoCabecera> MatrizDispersa::buscarFilaPorNodo(std::shared_ptr<Nodo> nodo)
+{
+    auto fila = primerFila;
+    while (fila)
+    {
+        auto actual = fila->primerNodo;
+        while (actual)
+        {
+            if (actual == nodo)
+                return fila;
+            actual = actual->derecha;
+        }
+        fila = fila->siguiente;
+    }
+    return nullptr;
 }
 
 /**
@@ -372,7 +368,7 @@ void MatrizDispersa::generarNodos(std::ostream &out, const std::string &NODE_STY
 /**
  * @brief Busca un nodo en una posición específica de la matriz
  * @param nodoFila Nodo inicial de la fila
- * @param nodoCol Nodo inicial de la columna 
+ * @param nodoCol Nodo inicial de la columna
  * @return Puntero al nodo encontrado o nullptr si no existe
  */
 Nodo *MatrizDispersa::buscarNodoEnPosicion(const std::shared_ptr<Nodo> &nodoFila, const std::shared_ptr<Nodo> &nodoCol)
@@ -515,36 +511,39 @@ AVL *MatrizDispersa::arbolAVLEmpresas(const std::string &empresa)
     auto actualFila = primerFila;
     AVL *arbol = new AVL();
 
-    // Recorrer la fila de la empresa
-    // Recorrer cada columna de la fila de adelante hacia atrás
+    std::cout << "Contenido del árbol antes de la fusión:" << std::endl;
 
+    // Recorrer hasta encontrar la fila de la empresa
     while (actualFila)
     {
         if (actualFila->nombre == empresa)
-
-            std::cout << "Empresa: " << empresa << std::endl;
-
         {
-            auto actualCol = primerColumna;
+            std::cout << "Empresa encontrada: " << empresa << std::endl;
 
+            // Solo procesar los nodos de esta empresa
+            auto actualCol = primerColumna;
             while (actualCol)
             {
                 auto nodo = buscarNodoEnPosicion(actualFila->primerNodo, actualCol->primerNodo);
 
+                // Recorrer todos los nodos hacia adelante en esta posición
                 while (nodo)
                 {
-                    // Asegúrate de que `activos` devuelve un `AVL`
-                    arbol->fusionar(*nodo->usuario->activos);
-
+                    if (nodo->usuario && nodo->usuario->activos)
+                    {
+                        arbol->fusionar(*nodo->usuario->activos);
+                    }
                     nodo = nodo->adelante.get();
                 }
 
                 actualCol = actualCol->siguiente;
             }
+            break; // Una vez procesada la empresa, terminamos
         }
         actualFila = actualFila->siguiente;
     }
 
+    std::cout << "Contenido del árbol resultante:" << std::endl;
     arbol->inorden();
 
     return arbol;
@@ -560,33 +559,37 @@ AVL *MatrizDispersa::arbolAVLDepartamentos(const std::string &departamento)
     auto actualCol = primerColumna;
     AVL *arbol = new AVL();
 
-    // Recorrer la columna del departamento
-    // Recorrer cada fila de la columna de abajo hacia arriba
+    // Recorrer hasta encontrar la columna del departamento
     while (actualCol)
     {
         if (actualCol->nombre == departamento)
         {
-            auto actualFila = primerFila;
+            std::cout << "Departamento encontrado: " << departamento << std::endl;
 
+            // Solo procesar los nodos de este departamento
+            auto actualFila = primerFila;
             while (actualFila)
             {
                 auto nodo = buscarNodoEnPosicion(actualFila->primerNodo, actualCol->primerNodo);
 
+                // Recorrer todos los nodos hacia adelante en esta posición
                 while (nodo)
                 {
-                    // Asegúrate de que `activos` devuelve un `AVL`
-                    arbol->fusionar(*nodo->usuario->activos);
-
+                    if (nodo->usuario && nodo->usuario->activos)
+                    {
+                        arbol->fusionar(*nodo->usuario->activos);
+                    }
                     nodo = nodo->adelante.get();
                 }
 
                 actualFila = actualFila->siguiente;
             }
+            break; // Una vez procesado el departamento, terminamos
         }
-
         actualCol = actualCol->siguiente;
     }
 
+    std::cout << "Contenido del árbol resultante:" << std::endl;
     arbol->inorden();
 
     return arbol;

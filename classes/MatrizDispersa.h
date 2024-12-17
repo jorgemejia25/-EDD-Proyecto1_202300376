@@ -64,6 +64,7 @@ private:
     std::string procesarFilas(std::ostream &out, const std::string &NODE_STYLE);
     std::pair<std::string, std::string> procesarColumnas(std::ostream &out, const std::string &NODE_STYLE);
     void generarNodos(std::ostream &out, const std::string &NODE_STYLE);
+    std::shared_ptr<NodoCabecera> buscarFilaPorNodo(std::shared_ptr<Nodo> nodo);
 
     /**
      * @brief Busca un nodo en una posición específica
@@ -127,7 +128,7 @@ public:
      */
     void mostrarActivosDeMatriz(int userId);
     Activo *buscarActivosDeMatriz(const std::string &idActivp);
-    
+
     /**
      * @brief Métodos para generar árboles AVL
      */

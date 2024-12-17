@@ -179,8 +179,10 @@ void AVL::inorden() const
 void AVL::generarDot(std::ostream &out) const
 {
     out << "digraph G {\n";
-    out << "    node [shape=circle, style=filled, fillcolor=lightblue];\n";
-    out << "    rankdir=TB;\n\n";
+    out << "    node [shape = box; style = \"filled,rounded\"; fillcolor = \"#E8F4F9\"; color = \"#2C3E50\"; penwidth = 2; fontname = \"Arial\"; fontsize = 11; margin = 0.3; fixedsize = true; width = 3.5; height = 3.5;];\n";
+    out << "    edge [color = \"#34495E\"; penwidth = 1.5; arrowsize = 0.8;];\n";
+    out << "    rankdir = TB;\n";
+    out << "    splines = ortho;\n\n";
 
     if (raiz)
     {
@@ -201,15 +203,12 @@ void AVL::generarDotRecursivo(std::ostream &out, std::shared_ptr<Nodo> nodo) con
         return;
 
     // Generar el nodo actual
-    out << "    \"" << nodo->activo.getId() << "\" [label=\"ID: "
-        << nodo->activo.getId() << "\\n"
-        << "Nombre: "
-        << nodo->activo.getNombre() << "\\n"
-        << "Descripción: "
-        << nodo->activo.getDescripcion() << "\\n"
-        << "Rentado: "
-        << nodo->activo.getRentado()
-        << "\"];\n";
+    out << "    \"" << nodo->activo.getId() << "\" [label = <<TABLE BORDER=\"0\" CELLBORDER=\"0\" CELLSPACING=\"2\">\n";
+    out << "        <TR><TD><B>ID:</B> " << nodo->activo.getId() << "</TD></TR>\n";
+    out << "        <TR><TD><B>Nombre:</B> " << nodo->activo.getNombre() << "</TD></TR>\n";
+    out << "        <TR><TD><B>Descripción:</B> " << nodo->activo.getDescripcion() << "</TD></TR>\n";
+    out << "        <TR><TD><B>Rentado:</B> " << nodo->activo.getRentado() << "</TD></TR>\n";
+    out << "    </TABLE>>];\n";
 
     // Generar conexiones con hijos
     if (nodo->izquierdo)
